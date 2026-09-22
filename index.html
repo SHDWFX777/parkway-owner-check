@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Parkway Pavilion Owner Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap">
+<style>
+[hidden]{display:none!important}
+html{color-scheme:light dark}
+
+:root{
+  --bg:#ffffff; --ink:#111111; --mute:#5a5f6a; --line:#111111; --hair:#d9dbe0;
+  --acc:#0000d9; --acc-ink:#ffffff; --req:#c8102e; --soft:#f3f4f7; --ok:#0b7a3b;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e0f12; --ink:#f2f3f5; --mute:#9aa0ab; --line:#f2f3f5; --hair:#2a2d34;
+  --acc:#5b7cff; --acc-ink:#0e0f12; --req:#ff5c6c; --soft:#171920; --ok:#4cc27a; } }
+:root[data-theme="dark"]{
+  --bg:#0e0f12; --ink:#f2f3f5; --mute:#9aa0ab; --line:#f2f3f5; --hair:#2a2d34;
+  --acc:#5b7cff; --acc-ink:#0e0f12; --req:#ff5c6c; --soft:#171920; --ok:#4cc27a; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,-apple-system,sans-serif;padding-block:0 96px;padding-inline:16px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font:700 18px/1.2 "JetBrains Mono",ui-monospace,Menlo,monospace;letter-spacing:.02em;margin:22px 0 4px;text-transform:uppercase}
+.addr{color:var(--mute);margin:0 0 14px;font-size:14px}
+.tabs{display:flex;border:1px solid var(--line);margin:0 0 14px}
+.tabs button{flex:1;background:var(--bg);color:var(--ink);border:0;border-right:1px solid var(--line);padding:11px 8px;font:600 14px Inter,system-ui,sans-serif;cursor:pointer}
+.tabs button:last-child{border-right:0}
+.tabs button[aria-selected="true"]{background:var(--acc);color:var(--acc-ink)}
+.intro{border:1px solid var(--line);padding:10px 12px;margin:0 0 18px;font-size:14px;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.count{font:700 13px "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}
+.count b{color:var(--acc)}
+section{border-top:1px solid var(--line);padding:14px 0 6px;margin:0 0 8px}
+section h2{font:700 13px "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.05em;margin:0 0 2px}
+section .note{color:var(--mute);font-size:13px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+.f{padding:0 0 8px}
+.f.wide{grid-column:1/-1}
+.f[hidden]{display:none!important}
+.lab{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.03em}
+.lab .req{color:var(--req);font-weight:700}
+.lab .chg{font:700 10px "JetBrains Mono",ui-monospace,monospace;color:var(--acc);border:1px solid var(--acc);padding:1px 5px;letter-spacing:.06em}
+.lab .chg[hidden]{display:none!important}
+.q{margin-left:auto;width:20px;height:20px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:700 12px Inter,sans-serif;cursor:pointer;padding:0;line-height:18px}
+.q[aria-expanded="true"]{background:var(--ink);color:var(--bg)}
+.hint{font-size:13px;color:var(--mute);border-left:2px solid var(--acc);padding:2px 0 2px 8px;margin:0 0 8px}
+.hint[hidden]{display:none!important}
+input[type=text],textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px Inter,system-ui,sans-serif;padding:8px 10px;border-radius:0}
+textarea{min-height:96px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.f.changed input[type=text],.f.changed textarea{border-color:var(--acc);border-width:2px;padding:7px 9px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 10px;font:500 13px Inter,system-ui,sans-serif;cursor:pointer;border-radius:0;display:inline-flex;align-items:center;gap:7px}
+.chip .box{width:12px;height:12px;border:1px solid var(--line);display:inline-block;flex:none}
+.chip.single .box{border-radius:50%}
+.chip[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.chip[aria-pressed="true"] .box{background:var(--acc-ink);border-color:var(--acc-ink)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:900px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:11px 16px;font:600 14px Inter,system-ui,sans-serif;cursor:pointer;border-radius:0}
+.btn.primary{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.btn.big{padding:13px 22px;font-size:15px}
+.review table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0 18px}
+.review th,.review td{border:1px solid var(--hair);padding:7px 9px;text-align:left;vertical-align:top}
+.review th{font:700 11px "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.05em;background:var(--soft)}
+.review tr.c td{border-color:var(--acc)}
+.review tr.c td:first-child{border-left:3px solid var(--acc)}
+.review .was{color:var(--mute);font-size:12px}
+.review .tag{font:700 10px "JetBrains Mono",ui-monospace,monospace;color:var(--acc);letter-spacing:.06em}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px}
+.done{border:1px solid var(--ok);padding:14px;margin:14px 0}
+.done h2{color:var(--ok);font:700 14px "JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;margin:0 0 6px}
+.err{border:1px solid var(--req);color:var(--req);padding:10px 12px;margin:0 0 14px;font-size:14px}
+.err[hidden]{display:none!important}
+.f.missing .lab{color:var(--req)}
+.small{font-size:13px;color:var(--mute)}
+pre.copy{white-space:pre-wrap;border:1px solid var(--hair);padding:10px;font:12px/1.4 "JetBrains Mono",ui-monospace,monospace;max-height:220px;overflow:auto;background:var(--soft)}
+@media (prefers-reduced-motion:no-preference){.chip,.btn{transition:background .12s,color .12s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Parkway Pavilion Owner Check</h1>
+  <p class="addr">2901 Parkway Blvd, Kissimmee FL 34747. KC Holdings of Osceola LLC. Listing agent Danny Nguyen, Charles Rutenberg Realty.</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div id="form">
+    <div class="intro">
+      <div>Everything below is already filled in. Tap anything that is wrong to change it. Fields marked <span style="color:var(--req);font-weight:700">*</span> are required by the MLS.</div>
+      <div class="count"><b id="nchg">0</b> changed</div>
+    </div>
+    <div class="err" id="err" hidden></div>
+    <div id="sections"></div>
+  </div>
+
+  <div id="review" class="review" hidden>
+    <div class="intro"><div>Review your answers. Changed rows are marked. Go back if anything needs another look.</div><div class="count"><b id="nchg2">0</b> changed</div></div>
+    <div class="actions">
+      <button class="btn" id="back">Go back and edit</button>
+      <button class="btn primary" id="send">Send to Danny</button>
+      <button class="btn" id="copy">Copy answers</button>
+    </div>
+    <div id="rtable"></div>
+    <div class="actions">
+      <button class="btn" id="back2">Go back and edit</button>
+      <button class="btn primary" id="send2">Send to Danny</button>
+    </div>
+  </div>
+
+  <div id="done" hidden>
+    <div class="done">
+      <h2>Sent</h2>
+      <div>Your email app opened with the answers addressed to Danny. Hit send there and you are finished. If nothing opened, copy the answers below and text or email them.</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="back3">Go back and edit</button>
+      <button class="btn" id="copy2">Copy answers</button>
+    </div>
+    <pre class="copy" id="plain"></pre>
+  </div>
+</div>
+
+<div class="bar" id="bar">
+  <div class="in">
+    <span class="small" id="barnote">Your changes save on this device as you go.</span>
+    <button class="btn primary big" id="save">Save and Send</button>
+  </div>
+</div>
+
+<script>
+const DATA = {"sections": [{"title": "Lease terms", "note": "What you are offering a tenant."}, {"title": "The building", "note": "Facts about the space and the structure."}, {"title": "Land and tax", "note": "Pulled from Osceola County records. Correct anything that does not match your tax bill."}, {"title": "Water and energy", "note": "Usually No for a plaza. Change only if it applies."}, {"title": "Showings", "note": "How agents get in to show the space."}, {"title": "Listing setup", "note": "Filled by the listing agent from the signed agreement. Shown so you can confirm."}], "fields": [{"id": "Input_405", "label": "Lease price", "hint": "Dollar amount per square foot per year, or total per month. Whole number, no dollar sign.", "sec": "Lease terms", "type": "text", "matrix": "Lease Price", "money": true}, {"id": "Input_1216", "label": "Lease price unit", "hint": "Is the price above per square foot or a total monthly amount?", "sec": "Lease terms", "type": "single", "matrix": "Lease Price Unit", "options": ["Total Monthly Amount", "Per SqFt"]}, {"id": "Input_1202", "label": "Lease amount frequency", "hint": "Is the price above a yearly figure or a monthly figure?", "sec": "Lease terms", "type": "single", "matrix": "Lease Amount Frequency", "options": ["Annually", "Monthly"]}, {"id": "Input_412", "label": "Lease term", "hint": "How long a lease you will sign.", "sec": "Lease terms", "type": "single", "matrix": "Lease Term", "options": [">6 Months <12", "12 Months", "24 Months", "3 to 5 Years", "6 + Years", "Month To Month"]}, {"id": "Input_414", "label": "Terms of lease", "hint": "Pick every structure you will accept. Absolute (Triple) Net means the tenant pays taxes, insurance and maintenance on top of rent.", "sec": "Lease terms", "type": "multi", "matrix": "Terms of Lease", "options": ["Absolute (Triple) Net", "Gross Lease", "Gross Percentages", "Ground Lease", "Lease Option", "Modified Gross", "Net Lease", "Net Net", "Other", "Pass Throughs", "Purchase Option", "Renewal Option", "Sale-Leaseback", "Seasonal", "Special Available (CLO)", "Varied Terms"]}, {"id": "Input_1068", "label": "Owner pays", "hint": "Which expenses the landlord covers. Pick None if the tenant covers everything.", "sec": "Lease terms", "type": "multi", "matrix": "Owner Pays", "options": ["Common Area Maintenance", "Electricity", "Gas", "Grounds Care", "Internet", "Liability Insurance", "Management", "None", "Other", "Pest Control", "Property Insurance", "Repairs", "Reserves", "Security", "Sewer", "Taxes", "Telephone", "Trash Collection", "Water"]}, {"id": "Input_1429", "label": "Pass-through expenses", "hint": "The extra charge on top of base rent for common area maintenance, taxes and insurance. Number only.", "sec": "Lease terms", "type": "text", "matrix": "Initial Pass-Through Expenses", "money": true}, {"id": "Input_1547", "label": "Pass-through expense type", "hint": "Is the pass-through figure a yearly amount per square foot or a flat monthly amount?", "sec": "Lease terms", "type": "single", "matrix": "Pass-Through Expenses Type", "options": ["Annual $/SqFt", "Flat Monthly"]}, {"id": "Input_416", "label": "Property style", "hint": "The type of space, as it will be marketed.", "sec": "The building", "type": "single", "matrix": "Property Style", "options": ["Agriculture", "Assembly Building", "Business", "Hotel/Motel", "Industrial", "Medical Office", "Mixed Use", "Multi Family (5+)", "Office", "Restaurant", "Retail", "Warehouse"]}, {"id": "Input_419", "label": "New construction", "hint": "Yes only if the building was never occupied.", "sec": "The building", "type": "single", "matrix": "New Construction Y/N", "options": ["Yes", "No"]}, {"id": "Input_446", "label": "Year built", "hint": "Four digit year from county records.", "sec": "The building", "type": "text", "matrix": "Year Built"}, {"id": "Input_477", "label": "Square feet total", "hint": "Total square feet of this unit. Number only.", "sec": "The building", "type": "text", "matrix": "SqFt Total"}, {"id": "Input_478", "label": "Square feet source", "hint": "Where the square footage number comes from.", "sec": "The building", "type": "single", "matrix": "SqFt Total Source", "options": ["Appraisal", "Builder", "Measured", "Owner Provided", "Public Records"]}, {"id": "Input_486", "label": "Air conditioning", "hint": "Pick every type of cooling the unit has.", "sec": "The building", "type": "multi", "matrix": "Air Conditioning", "options": ["A/C - Office Only", "Central Air", "Humidity Control", "Mini-Split Unit(s)", "None", "Other", "Wall/Window Unit(s)", "Zoned"]}, {"id": "Input_430", "label": "Exterior construction", "hint": "What the outside walls are made of. Pick all that apply.", "sec": "The building", "type": "multi", "matrix": "Exterior Construction", "options": ["Asbestos", "Block", "Brick", "Cedar", "Cement Siding", "Concrete", "HardiPlank Type", "ICFs (Insulated Concrete Forms)", "Log", "Metal Frame", "Metal Siding", "Other", "SIP (Structurally Insulated Panel)", "Stone", "Stucco", "Tilt up Walls", "Vinyl Siding", "Wood Frame", "Wood Frame (FSC)", "Wood Siding"]}, {"id": "Input_1040", "label": "Foundation", "hint": "What the building sits on.", "sec": "The building", "type": "multi", "matrix": "Foundation", "options": ["Basement", "Block", "Brick/Mortar", "Concrete Perimeter", "Crawlspace", "Other", "Pillar/Post/Pier", "Slab", "Stem Wall", "Stilt/On Piling"]}, {"id": "Input_425", "label": "Road frontage", "hint": "The kind of road the property faces.", "sec": "The building", "type": "multi", "matrix": "Road Frontage", "options": ["Access Road", "Alley", "Business District", "City Street", "County Road", "Divided Highway", "Easement", "Highway", "Interchange", "Interstate", "Main Thoroughfare", "Private Road", "Rail", "State Road", "Turn Lanes", "Other", "None"]}, {"id": "Input_1109", "label": "Road surface type", "hint": "What the road and lot surface is made of.", "sec": "The building", "type": "multi", "matrix": "Road Surface Type", "options": ["Asphalt", "Brick", "Chip And Seal", "Concrete", "Dirt", "Gravel", "Limerock", "Other", "Paved", "Unimproved"]}, {"id": "Input_473", "label": "Number of buildings", "hint": "How many buildings on the whole parcel.", "sec": "The building", "type": "text", "matrix": "Total Number of Buildings"}, {"id": "Input_440", "label": "Parcel number", "hint": "Osceola County parcel ID with dashes.", "sec": "Land and tax", "type": "text", "matrix": "Tax ID (Parcel Number)"}, {"id": "Input_441", "label": "Tax year", "hint": "The year on the most recent tax bill.", "sec": "Land and tax", "type": "text", "matrix": "Tax Year"}, {"id": "Input_442", "label": "Annual taxes", "hint": "Total property tax for the whole parcel for that year. Number only.", "sec": "Land and tax", "type": "text", "matrix": "Taxes (Annual Amount)", "money": true}, {"id": "Input_443", "label": "Additional parcels", "hint": "Yes if the property spans more than one parcel.", "sec": "Land and tax", "type": "single", "matrix": "Additional Parcels Y/N", "options": ["Yes", "No"]}, {"id": "Input_449", "label": "Legal description", "hint": "From the deed or tax bill.", "sec": "Land and tax", "type": "text", "matrix": "Legal Description"}, {"id": "Input_450", "label": "Section", "hint": "From the tax bill.", "sec": "Land and tax", "type": "text", "matrix": "Section"}, {"id": "Input_451", "label": "Township", "hint": "From the tax bill.", "sec": "Land and tax", "type": "text", "matrix": "Township"}, {"id": "Input_452", "label": "Range", "hint": "From the tax bill.", "sec": "Land and tax", "type": "text", "matrix": "Range"}, {"id": "Input_453", "label": "Plat book and page", "hint": "From the recorded plat.", "sec": "Land and tax", "type": "text", "matrix": "Plat Book/Page"}, {"id": "Input_454", "label": "Block or parcel", "hint": "From the recorded plat.", "sec": "Land and tax", "type": "text", "matrix": "Block/Parcel"}, {"id": "Input_455", "label": "Lot number", "hint": "From the recorded plat.", "sec": "Land and tax", "type": "text", "matrix": "Lot #"}, {"id": "Input_462", "label": "Flood zone code", "hint": "From the FEMA flood map. X means low risk, A or AE means a flood zone.", "sec": "Land and tax", "type": "text", "matrix": "Flood Zone Code"}, {"id": "Input_467", "label": "Lot size in square feet", "hint": "Size of the whole parcel.", "sec": "Land and tax", "type": "text", "matrix": "Lot Size Square Footage"}, {"id": "Input_468", "label": "Lot size in acres", "hint": "Same parcel in acres.", "sec": "Land and tax", "type": "text", "matrix": "Lot Size Acres"}, {"id": "Input_232", "label": "Water access", "hint": "Can a tenant reach a body of water from the property?", "sec": "Water and energy", "type": "single", "matrix": "Water Access Y/N", "options": ["Yes", "No"]}, {"id": "Input_235", "label": "Water access type", "hint": "Only if water access is Yes.", "sec": "Water and energy", "type": "multi", "matrix": "Water Access", "options": ["Bay/Harbor", "Bayou", "Beach", "Beach - Access Deeded", "Brackish Water", "Canal - Brackish", "Canal - Freshwater", "Canal - Saltwater", "Creek", "Freshwater Canal w/Lift to Saltwater Canal", "Gulf/Ocean", "Gulf/Ocean to Bay", "Intracoastal Waterway", "Lagoon/Estuary", "Lake", "Lake - Chain of Lakes", "Limited Access", "Marina", "Pond", "River"], "dep": "Input_232"}, {"id": "Input_233", "label": "Water view", "hint": "Can you see water from the property?", "sec": "Water and energy", "type": "single", "matrix": "Water View Y/N", "options": ["Yes", "No"]}, {"id": "Input_236", "label": "Water view type", "hint": "Only if water view is Yes.", "sec": "Water and energy", "type": "multi", "matrix": "Water View", "options": ["Bay/Harbor - Full", "Bay/Harbor - Partial", "Bayou", "Beach", "Canal", "Creek", "Gulf/Ocean - Full", "Gulf/Ocean - Partial", "Gulf/Ocean to Bay", "Intracoastal Waterway", "Lagoon/Estuary", "Lake", "Lake - Chain of Lakes", "Marina", "Pond", "River"], "dep": "Input_233"}, {"id": "Input_234", "label": "Water extras", "hint": "Docks, lifts, seawalls or similar.", "sec": "Water and energy", "type": "single", "matrix": "Water Extras Y/N", "options": ["Yes", "No"]}, {"id": "Input_237", "label": "Water extras type", "hint": "Only if water extras is Yes.", "sec": "Water and energy", "type": "multi", "matrix": "Water Extras", "options": ["Assigned Boat Slip", "Boat Port", "Boat Ramp - Private", "Boathouse", "Boats - None Allowed", "Bridges - Fixed", "Bridges - No Fixed Bridges", "Davits", "Fishing Pier", "Lift", "Lift - Covered", "Lock", "Minimum Wake Zone", "No Wake Zone", "Powerboats – None Allowed", "Private Lake Dues Required", "Riprap", "Sailboat Water", "Seawall - Concrete", "Seawall - Other", "Skiing Allowed"], "dep": "Input_234"}, {"id": "Input_238", "label": "Water frontage", "hint": "Does the parcel touch water?", "sec": "Water and energy", "type": "single", "matrix": "Water Frontage Y/N", "options": ["Yes", "No"]}, {"id": "Input_239", "label": "Water frontage type", "hint": "Only if water frontage is Yes.", "sec": "Water and energy", "type": "multi", "matrix": "Water Frontage", "options": ["Bay/Harbor", "Bayou", "Beach", "Brackish Water", "Canal - Brackish", "Canal - Freshwater", "Canal - Saltwater", "Canal Front", "Creek", "Freshwater Canal w/Lift to Saltwater Canal", "Gulf/Ocean", "Gulf/Ocean to Bay", "Intracoastal Waterway", "Lagoon/Estuary", "Lake Front", "Lake - Chain of Lakes", "Marina", "Pond", "Riparian Rights", "River"], "dep": "Input_238"}, {"id": "Input_1456", "label": "Green energy generation", "hint": "Solar, wind or hydro power on site?", "sec": "Water and energy", "type": "single", "matrix": "Green Energy Generation Y/N", "options": ["Yes", "No"]}, {"id": "Input_809", "label": "Green energy type", "hint": "Only if green energy is Yes.", "sec": "Water and energy", "type": "multi", "matrix": "Green Energy Generation", "options": ["Hydro Power", "Solar", "Wind"], "dep": "Input_1456"}, {"id": "Input_361", "label": "Showing instructions", "hint": "Pick every rule that applies to showing the unit.", "sec": "Showings", "type": "multi", "matrix": "Showing Instructions", "options": ["Coming Soon - Allowing Showings", "Lockbox - Supra", "Lockbox - SentriLock", "24 Hour Notice", "Appointment Only", "Call Agent 2", "Call Before Showing", "Call Listing Agent", "Call Listing Office", "Call Manager", "Call Owner", "Call Seller Direct", "Call Tenant", "Combination Lockbox", "Contact Call Center", "Dangerous Farm Animals on Site", "Do Not Contact Tenants", "Farm Animals on Site", "Gate Code Required", "Gate Key In Listing Off", "Gate Key In Lock Box", "Go Direct", "Guard Dog", "Key In Office", "Key/Agent", "Listing Agent Must Accompany", "Lockbox", "Lockbox - Coded", "Lockbox - Electronic", "Lockbox - Electronic - CBS Code Required", "Lockbox - No Call", "Lockbox - Other", "Locked Gate", "No Call Box", "No Lockbox", "Other", "See Remarks", "Use ShowingTime Button"]}, {"id": "Input_79", "label": "Listing contract date", "hint": "Date the listing agreement was signed. MM/DD/YYYY.", "sec": "Listing setup", "type": "text", "matrix": "Listing Contract Date"}, {"id": "Input_81", "label": "Expiration date", "hint": "Date the listing agreement ends. MM/DD/YYYY.", "sec": "Listing setup", "type": "text", "matrix": "Expiration Date"}, {"id": "Input_1060", "label": "Listing type", "hint": "The kind of listing agreement signed.", "sec": "Listing setup", "type": "single", "matrix": "Listing Type", "options": ["Exclusive Agency", "Exclusive Right To Lease", "Exclusive Right w/ Excptn"]}, {"id": "Input_1431", "label": "Seller representation", "hint": "How the brokerage represents you.", "sec": "Listing setup", "type": "single", "matrix": "Seller Representation", "options": ["No Brokerage Relationship", "Single Agent", "Single Agent w/ Consent to Transition", "Transaction Broker"]}, {"id": "Input_84", "label": "Listing service type", "hint": "Full service means the agent handles everything.", "sec": "Listing setup", "type": "single", "matrix": "Listing Service Type", "options": ["Full Service", "Limited Service"]}, {"id": "Input_1490", "label": "Office exclusive", "hint": "Yes keeps the listing inside the brokerage and off the MLS.", "sec": "Listing setup", "type": "single", "matrix": "Office Exclusive Y/N", "options": ["Yes", "No"]}, {"id": "Input_1491", "label": "Office exclusive with temporary exclusion", "hint": "Yes delays the MLS release for a set period.", "sec": "Listing setup", "type": "single", "matrix": "Office Exclusive with Temporary Exclusion", "options": ["Yes", "No"]}, {"id": "Input_86", "label": "Street number", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "Street Number"}, {"id": "Input_88", "label": "Street name", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "Street Name"}, {"id": "Input_92", "label": "Unit number", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "Unit Number"}, {"id": "Input_93", "label": "City", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "City"}, {"id": "Input_94", "label": "State", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "State"}, {"id": "Input_95", "label": "Zip", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "Zip"}, {"id": "Input_98", "label": "County", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "County"}, {"id": "Input_97", "label": "Country", "hint": "", "sec": "Listing setup", "type": "text", "matrix": "Country"}, {"id": "Input_362", "label": "Show on internet", "hint": "Yes lets the listing appear on public real estate sites.", "sec": "Listing setup", "type": "single", "matrix": "Internet Y/N", "options": ["Yes", "No"]}, {"id": "Input_1504", "label": "Delayed distribution", "hint": "Yes holds the listing back from public sites for a period.", "sec": "Listing setup", "type": "single", "matrix": "Delayed Distribution Y/N", "options": ["Yes", "No"]}, {"id": "Input_365", "label": "Third party sites", "hint": "Yes allows Zillow, LoopNet and similar to display it.", "sec": "Listing setup", "type": "single", "matrix": "Third Party Y/N", "options": ["Yes", "No"]}, {"id": "Input_366", "label": "Show address on internet", "hint": "No hides the street address on public sites.", "sec": "Listing setup", "type": "single", "matrix": "Show Prop Address On Internet Y/N", "options": ["Yes", "No"]}, {"id": "Input_363", "label": "Allow public comments", "hint": "Yes lets sites show comments and reviews on the listing.", "sec": "Listing setup", "type": "single", "matrix": "IDX/VOW Display Comments Y/N", "options": ["Yes", "No"]}, {"id": "Input_364", "label": "Allow automated valuations", "hint": "Yes lets sites show an estimated value next to the listing.", "sec": "Listing setup", "type": "single", "matrix": "IDX/VOW AVM Y/N", "options": ["Yes", "No"]}, {"id": "Input_367", "label": "Automatic virtual tour", "hint": "Yes lets the MLS build a photo tour from the listing photos.", "sec": "Listing setup", "type": "single", "matrix": "Create Free Automatic Virtual Tour Y/N", "options": ["Yes", "No"]}, {"id": "Input_1021", "label": "Public remarks", "hint": "The marketing description buyers and agents read.", "sec": "Listing setup", "type": "text", "matrix": "Public Remarks (English Only)", "long": true}, {"id": "Input_374", "label": "Driving directions", "hint": "How to get to the unit.", "sec": "Listing setup", "type": "text", "matrix": "Driving Directions", "long": true}], "units": {"B-1": {"Input_405": "25", "Input_1216": "Per SqFt", "Input_1202": "Annually", "Input_412": "3 to 5 Years", "Input_414": ["Absolute (Triple) Net"], "Input_1068": ["None"], "Input_1429": "9.00", "Input_1547": "Annual $/SqFt", "Input_416": "Restaurant", "Input_419": "No", "Input_446": "1988", "Input_477": "5700", "Input_478": "Owner Provided", "Input_486": ["Central Air"], "Input_430": ["Block", "Stucco"], "Input_1040": ["Slab"], "Input_425": ["Business District", "City Street"], "Input_1109": ["Asphalt", "Paved"], "Input_473": "2", "Input_440": "05-25-28-4789-0001-0010", "Input_441": "2025", "Input_442": "198011.46", "Input_443": "No", "Input_449": "THE PARKWAY PHASE 1-B PB 5 PG 59 LOT 1", "Input_450": "5", "Input_451": "25S", "Input_452": "28E", "Input_453": "5-59", "Input_454": "1", "Input_455": "1", "Input_462": "A", "Input_467": "354099", "Input_468": "8.13", "Input_232": "No", "Input_235": [], "Input_233": "No", "Input_236": [], "Input_234": "No", "Input_237": [], "Input_238": "No", "Input_239": [], "Input_1456": "No", "Input_809": [], "Input_361": ["Appointment Only", "Call Listing Agent", "Use ShowingTime Button"], "Input_79": "09/15/2026", "Input_81": "09/30/2027", "Input_1060": "Exclusive Right To Lease", "Input_1431": "Transaction Broker", "Input_84": "Full Service", "Input_1490": "No", "Input_1491": "No", "Input_86": "2901", "Input_88": "PARKWAY", "Input_92": "B-1", "Input_93": "KISSIMMEE", "Input_94": "Florida", "Input_95": "34747", "Input_98": "Osceola", "Input_97": "United States", "Input_362": "Yes", "Input_1504": "No", "Input_365": "Yes", "Input_366": "No", "Input_363": "No", "Input_364": "No", "Input_367": "Yes", "Input_1021": "Second generation restaurant space for lease in Parkway Pavilion, just off US 192 and I-4 Exit 64 in the Kissimmee tourist corridor. About 5,700 SF with a full commercial kitchen, bar, multiple dining rooms and a private party room already built out. Endcap unit with lit building signage and shared plaza parking. Established plaza with long standing restaurant tenants. $25.00 NNN, CAM estimated at $9.00. Call the listing agent to schedule a showing.", "Input_374": "From I-4 take Exit 64 for US 192 West toward Kissimmee. Continue west on US 192 about half a mile. Turn north onto Parkway Blvd. Parkway Pavilion is on the right. Unit B-1 is the endcap of Building 2."}, "B-4": {"Input_405": "25", "Input_1216": "Per SqFt", "Input_1202": "Annually", "Input_412": "3 to 5 Years", "Input_414": ["Absolute (Triple) Net"], "Input_1068": ["None"], "Input_1429": "9.00", "Input_1547": "Annual $/SqFt", "Input_416": "", "Input_419": "No", "Input_446": "1988", "Input_477": "", "Input_478": "Owner Provided", "Input_486": ["Central Air"], "Input_430": ["Block", "Stucco"], "Input_1040": ["Slab"], "Input_425": ["Business District", "City Street"], "Input_1109": ["Asphalt", "Paved"], "Input_473": "2", "Input_440": "05-25-28-4789-0001-0010", "Input_441": "2025", "Input_442": "198011.46", "Input_443": "No", "Input_449": "THE PARKWAY PHASE 1-B PB 5 PG 59 LOT 1", "Input_450": "5", "Input_451": "25S", "Input_452": "28E", "Input_453": "5-59", "Input_454": "1", "Input_455": "1", "Input_462": "A", "Input_467": "354099", "Input_468": "8.13", "Input_232": "No", "Input_235": [], "Input_233": "No", "Input_236": [], "Input_234": "No", "Input_237": [], "Input_238": "No", "Input_239": [], "Input_1456": "No", "Input_809": [], "Input_361": ["Appointment Only", "Call Listing Agent", "Use ShowingTime Button"], "Input_79": "09/15/2026", "Input_81": "09/30/2027", "Input_1060": "Exclusive Right To Lease", "Input_1431": "Transaction Broker", "Input_84": "Full Service", "Input_1490": "No", "Input_1491": "No", "Input_86": "2901", "Input_88": "PARKWAY", "Input_92": "B-4", "Input_93": "KISSIMMEE", "Input_94": "Florida", "Input_95": "34747", "Input_98": "Osceola", "Input_97": "United States", "Input_362": "Yes", "Input_1504": "No", "Input_365": "Yes", "Input_366": "No", "Input_363": "No", "Input_364": "No", "Input_367": "Yes", "Input_1021": "", "Input_374": "From I-4 take Exit 64 for US 192 West toward Kissimmee. Continue west on US 192 about half a mile. Turn north onto Parkway Blvd. Parkway Pavilion is on the right. Unit B-4 is in Building 2."}}, "to": "winwithnguyen777@gmail.com"};
+const F = DATA.fields, S = DATA.sections;
+let unit = 'B-1';
+let state = {};
+let base = {};
+const $ = s => document.querySelector(s);
+const fmap = Object.fromEntries(F.map(f=>[f.id,f]));
+
+function key(){ return 'ppoc_'+unit; }
+function load(u){
+  unit = u;
+  base = JSON.parse(JSON.stringify(DATA.units[u]));
+  state = JSON.parse(JSON.stringify(base));
+  try{ const s = localStorage.getItem(key()); if(s){ const o = JSON.parse(s); for(const k in o) if(k in state) state[k]=o[k]; } }catch(e){}
+  render();
+}
+function persist(){ try{ localStorage.setItem(key(), JSON.stringify(state)); }catch(e){} }
+function same(a,b){ if(Array.isArray(a)||Array.isArray(b)){ a=[...(a||[])].sort(); b=[...(b||[])].sort(); return JSON.stringify(a)===JSON.stringify(b);} return String(a??'').trim()===String(b??'').trim(); }
+function changed(id){ return !same(state[id], base[id]); }
+function fmt(v){ return Array.isArray(v) ? (v.length? v.join(', ') : 'none picked') : (String(v??'').trim() || 'blank'); }
+function isShown(f){ if(!f.dep) return true; return state[f.dep]==='Yes'; }
+function missing(f){ if(!isShown(f)) return false; if(f.id==='Input_92'||f.id==='Input_1021'&&unit==='B-4') return false; const v=state[f.id]; return Array.isArray(v)? v.length===0 : !String(v??'').trim(); }
+
+function render(){
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.u===unit));
+  const root = $('#sections'); root.innerHTML='';
+  for(const s of S){
+    const sec = document.createElement('section');
+    sec.innerHTML = '<h2>'+esc(s.title)+'</h2><p class="note">'+esc(s.note)+'</p><div class="grid"></div>';
+    const grid = sec.querySelector('.grid');
+    for(const f of F.filter(x=>x.sec===s.title)) grid.appendChild(field(f));
+    root.appendChild(sec);
+  }
+  update();
+}
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function field(f){
+  const d = document.createElement('div');
+  d.className = 'f' + ((f.type!=='text'||f.long)?' wide':'');
+  d.id = 'f_'+f.id;
+  const hid = 'h_'+f.id;
+  d.innerHTML = '<div class="lab"><span>'+esc(f.label)+'</span><span class="req">*</span><span class="chg" hidden>CHANGED</span>'+(f.hint?'<button type="button" class="q" aria-expanded="false" aria-controls="'+hid+'" aria-label="Help for '+esc(f.label)+'">?</button>':'')+'</div>'
+    + (f.hint?'<div class="hint" id="'+hid+'" hidden>'+esc(f.hint)+'</div>':'');
+  const q = d.querySelector('.q');
+  if(q) q.onclick = ()=>{ const h=d.querySelector('.hint'); h.hidden=!h.hidden; q.setAttribute('aria-expanded', String(!h.hidden)); };
+  if(f.type==='text'){
+    const el = document.createElement(f.long?'textarea':'input');
+    if(!f.long) el.type='text';
+    el.id = 'in_'+f.id; el.value = state[f.id]||'';
+    if(f.money) el.inputMode='decimal';
+    el.oninput = ()=>{ state[f.id]=el.value; persist(); update(); };
+    d.appendChild(el);
+  } else {
+    const wrap = document.createElement('div'); wrap.className='chips';
+    for(const o of f.options){
+      const b = document.createElement('button'); b.type='button'; b.className='chip'+(f.type==='single'?' single':'');
+      b.id = 'c_'+f.id+'_'+o.replace(/[^a-z0-9]/gi,'');
+      b.innerHTML = '<span class="box"></span>'+esc(o);
+      b.onclick = ()=>{
+        if(f.type==='single'){ state[f.id] = (state[f.id]===o? '' : o); }
+        else { const v = new Set(state[f.id]||[]); v.has(o)? v.delete(o) : v.add(o); state[f.id]=[...v]; }
+        persist(); update();
+      };
+      wrap.appendChild(b);
+    }
+    d.appendChild(wrap);
+  }
+  return d;
+}
+function update(){
+  let n=0;
+  for(const f of F){
+    const d = document.getElementById('f_'+f.id); if(!d) continue;
+    d.hidden = !isShown(f);
+    const c = changed(f.id); if(c && isShown(f)) n++;
+    d.classList.toggle('changed', c);
+    d.querySelector('.chg').hidden = !c;
+    if(f.type!=='text'){
+      const cur = state[f.id];
+      d.querySelectorAll('.chip').forEach(b=>{
+        const o = b.textContent;
+        const on = f.type==='single' ? cur===o : (cur||[]).includes(o);
+        b.setAttribute('aria-pressed', String(on));
+      });
+    }
+  }
+  $('#nchg').textContent = n; $('#nchg2').textContent = n;
+}
+
+function plainText(){
+  const lines = ['PARKWAY PAVILION UNIT '+unit+' OWNER CHECK','2901 Parkway Blvd, Kissimmee FL 34747',''];
+  const ch = F.filter(f=>isShown(f)&&changed(f.id));
+  lines.push('CHANGED ('+ch.length+')');
+  if(!ch.length) lines.push('Nothing changed. Everything confirmed as prefilled.');
+  for(const f of ch) lines.push('- '+f.matrix+': '+fmt(state[f.id])+'  (was: '+fmt(base[f.id])+')');
+  lines.push('','CONFIRMED AS IS ('+F.filter(f=>isShown(f)&&!changed(f.id)).length+')');
+  lines.push('','DATA '+JSON.stringify({unit, changed:Object.fromEntries(ch.map(f=>[f.id,state[f.id]]))}));
+  return lines.join('\n');
+}
+function reviewTable(){
+  let h='<table><thead><tr><th style="width:38%">Field</th><th>Answer</th></tr></thead><tbody>';
+  for(const s of S){
+    h+='<tr><th colspan="2">'+esc(s.title)+'</th></tr>';
+    for(const f of F.filter(x=>x.sec===s.title&&isShown(x))){
+      const c = changed(f.id);
+      h+='<tr class="'+(c?'c':'')+'"><td>'+esc(f.label)+(c?' <span class="tag">CHANGED</span>':'')+'</td><td>'+esc(fmt(state[f.id]))+(c?'<div class="was">was: '+esc(fmt(base[f.id]))+'</div>':'')+'</td></tr>';
+    }
+  }
+  return h+'</tbody></table>';
+}
+function show(which){
+  $('#form').hidden = which!=='form'; $('#review').hidden = which!=='review'; $('#done').hidden = which!=='done';
+  $('#bar').hidden = which!=='form';
+  window.scrollTo({top:0});
+}
+$('#save').onclick = ()=>{
+  const miss = F.filter(missing);
+  document.querySelectorAll('.f.missing').forEach(d=>d.classList.remove('missing'));
+  if(miss.length){
+    miss.forEach(f=>document.getElementById('f_'+f.id).classList.add('missing'));
+    const e=$('#err'); e.hidden=false; e.textContent = 'Still blank: '+miss.map(f=>f.label).join(', ')+'. Fill those in or leave a note in Public remarks, then Save and Send again.';
+    document.getElementById('f_'+miss[0].id).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  $('#err').hidden=true;
+  $('#rtable').innerHTML = reviewTable();
+  show('review');
+};
+function goBack(){ show('form'); }
+['#back','#back2','#back3'].forEach(s=>$(s).onclick=goBack);
+function send(){
+  const body = plainText();
+  $('#plain').textContent = body;
+  const url = 'mailto:'+DATA.to+'?subject='+encodeURIComponent('Parkway Pavilion '+unit+' owner check')+'&body='+encodeURIComponent(body);
+  show('done');
+  window.location.href = url;
+}
+$('#send').onclick=send; $('#send2').onclick=send;
+async function copy(btn){
+  const t = plainText(); $('#plain').textContent=t;
+  try{ await navigator.clipboard.writeText(t); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy answers',1500); }
+  catch(e){ btn.textContent='Select the text below'; }
+}
+$('#copy').onclick=e=>copy(e.target); $('#copy2').onclick=e=>copy(e.target);
+
+const tabs = $('#tabs');
+for(const u of Object.keys(DATA.units)){
+  const b=document.createElement('button'); b.type='button'; b.role='tab'; b.dataset.u=u; b.id='tab_'+u; b.textContent='Unit '+u;
+  b.onclick=()=>{ load(u); show('form'); };
+  tabs.appendChild(b);
+}
+load('B-1');
+</script>
+
+</body>
+</html>
